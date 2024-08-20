@@ -8,4 +8,9 @@ app = FastAPI()
 # rest functionality
 @app.get('/')
 def index():
-    return 'heyy'
+    return 
+    {
+        'data':{
+            "name":"Sam"
+        }
+    }
