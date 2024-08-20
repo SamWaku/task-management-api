@@ -6,7 +6,6 @@ app = FastAPI()
 # some methods
 
 # rest functionality
-
 @app.get('/')
 def index():
     return 'heyy'
