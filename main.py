@@ -13,3 +13,8 @@ def index():
             "name":"Sam"
         }
     }
+
+
+@app.get('/about')
+def about():
+    return {"data":{"title":"Some Title"}}
