@@ -18,6 +18,3 @@ def index():
 @app.get('/about')
 def about():
     return {"data":{"title":"Some Title"}}
-
-# params
-@app.get('/abo')
