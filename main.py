@@ -22,4 +22,4 @@ def about():
 
 @app.post('/task')
 def create_task():
-    pass
+    return "Task is created"
