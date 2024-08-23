@@ -6,11 +6,11 @@ app = FastAPI()
 # some methods
 
 # rest functionality
-@app.get('/')
+@app.get('/tasks')
 def index():
     return {
         'data':{
-            "name":"Sam"
+            "name":"Finish task"
         }
     }
 
@@ -18,3 +18,8 @@ def index():
 @app.get('/about')
 def about():
     return {"data":{"title":"Some Title"}}
+
+
+@app.post('/task')
+def create_task():
+    pass
