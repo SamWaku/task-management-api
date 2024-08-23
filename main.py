@@ -24,5 +24,5 @@ class Blog(BaseModel):
     pass
 
 @app.post('/task')
-def create_task():
+def create_task(request: Blog):
     return {"data": {"Task is created"}}
