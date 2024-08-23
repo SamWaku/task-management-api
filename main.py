@@ -1,5 +1,6 @@
 # imports
 from fastapi import FastAPI
+from pydantic import BaseModel
 
 app = FastAPI()
 
@@ -19,6 +20,8 @@ def index():
 def about():
     return {"data":{"title":"Some Title"}}
 
+class Blog(BaseModel):
+    pass
 
 @app.post('/task')
 def create_task():
