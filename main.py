@@ -22,4 +22,4 @@ def about():
 
 @app.post('/task')
 def create_task():
-    return "Task is created"
+    return {"data": {"Task is created"}}
