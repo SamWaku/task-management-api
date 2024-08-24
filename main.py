@@ -20,10 +20,10 @@ def index():
 def about():
     return {"data":{"title":"Some Title"}}
 
-class Blog(BaseModel):
+class Task(BaseModel):
     pass
 
 @app.post('/task')
-def create_task(request: Blog):
+def create_task(request: Task):
     return request
     return {"data": {"Task is created"}}
