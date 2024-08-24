@@ -1,34 +1,36 @@
 # imports
 from fastapi import FastAPI
 from pydantic import BaseModel
+from typing import Optional
 
 app = FastAPI()
 
-# some methods
+class Task(BaseModel): 
+    pass
 
+# some methods
 # rest functionality
-@app.get('/tasks')
-def index():
-    return {
-        'data':{
-            "name":"Finish task"
-        }
-    }
+@app.get('/task')
+def index(limit=10, completed: bool = True, sort: Optional[str] = None):
+    # 10 completed tasks
+    if completed: 
+        return {'data': f'{limit} completedtasks from the db'}
+    else:
+        return{'data': f'{limit} tasks from the db'}
 
 # about
 @app.get('/about')
 def about():
     return {"data":{"title":"Some Title"}}
 
-class Task(BaseModel): 
-    pass
 
-@app.post('/tasks')
+
+@app.post('/create-task')
 def create_task(request: Task):
     return request
     return {"data": {"Task is created"}}
 
 
-@app.get('/task/{id}')
-def comment_by_id(id):
-    
+@app.get('/get-task/{id}')
+def task_by_id(id):
+    return {"data": id}
