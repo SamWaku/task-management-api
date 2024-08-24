@@ -8,12 +8,12 @@ app = FastAPI()
 class Task(BaseModel): 
     title: str
     duration: str
-    completed: Optional[bool]
+    completed: Optional[bool] = True
 
 # some methods
 # rest functionality
 @app.get('/task')
-def index(limit=10, completed: bool = True, sort: Optional[str] = None):
+def index(limit=10, completed: Optional[bool] = True, sort: Optional[str] = None):
     # 10 completed tasks
     if completed: 
         return {'data': f'{limit} completed tasks from the db'}
