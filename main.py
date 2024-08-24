@@ -2,7 +2,7 @@
 from fastapi import FastAPI
 from pydantic import BaseModel
 from typing import Optional
-from uvicorn import uvicorn
+import uvicorn 
 
 app = FastAPI()
 
@@ -38,5 +38,5 @@ def task_by_id(id):
     return {"data": id}
 
 
-if __name__ = "__main__":
-    uvicorn.run(app, host="127.0.0.1", port: '5000')
+if __name__ == "__main__":
+    uvicorn.run(app, host="127.0.0.1", port=5000)
