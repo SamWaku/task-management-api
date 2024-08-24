@@ -6,7 +6,9 @@ from typing import Optional
 app = FastAPI()
 
 class Task(BaseModel): 
-    pass
+    title: str
+    duration: str
+    completed: Optional[bool]
 
 # some methods
 # rest functionality
@@ -14,7 +16,7 @@ class Task(BaseModel):
 def index(limit=10, completed: bool = True, sort: Optional[str] = None):
     # 10 completed tasks
     if completed: 
-        return {'data': f'{limit} completedtasks from the db'}
+        return {'data': f'{limit} completed tasks from the db'}
     else:
         return{'data': f'{limit} tasks from the db'}
 
