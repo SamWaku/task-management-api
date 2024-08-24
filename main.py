@@ -23,10 +23,10 @@ def about():
 class Task(BaseModel): 
     pass
 
-@app.post('/task')
+@app.post('/tasks')
 def create_task(request: Task):
     return request
     return {"data": {"Task is created"}}
 
 
-@app.get()
+@app.get('/task/{id}')
