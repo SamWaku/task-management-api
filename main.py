@@ -13,6 +13,10 @@ class Task(BaseModel):
 
 # some methods
 # rest functionality
+@app.get('/')
+def indexmain():
+    return "Connected!"
+
 @app.get('/task')
 def index(limit=10, completed: Optional[bool] = False, sort: Optional[str] = None):
     # 10 completed tasks
