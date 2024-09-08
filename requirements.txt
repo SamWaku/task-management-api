@@ -1,0 +1,4 @@
+fastapi
+uvicorn[Standard]
+sqlalchemy
+psycopg2
