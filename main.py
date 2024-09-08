@@ -25,10 +25,10 @@ def index(limit=10, completed: Optional[bool] = False, sort: Optional[str] = Non
     else:
         return{'data': f'{limit} tasks from the db'}
 
-# about
-@app.get('/about')
-def about():
-    return {"data":{"title":"Some Title"}}
+# # about
+# @app.get('/about')
+# def about():
+#     return {"data":{"title":"Some Title"}}
 
 
 
