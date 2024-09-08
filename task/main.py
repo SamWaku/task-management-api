@@ -1,6 +1,7 @@
 from fastapi import FastAPI
 from . import schemas, models
 from .database import engine
+from sqlalchemy.orm import Session 
 
 models.Base.metadata.create_all(engine)
 
