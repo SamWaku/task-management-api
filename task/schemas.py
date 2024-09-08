@@ -5,4 +5,4 @@ from typing import Optional
 class Task(BaseModel):
     title: str
     duration: str
-    completed: Optional[bool] = False
+    # completed: Optional[bool] = False

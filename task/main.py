@@ -14,7 +14,7 @@ def get_db():
     finally:
         db.close()
 
-@app.get('/create-task')
+@app.post('/create-task')
 def create(request: schemas.Task, db: Session = Depends(get_db)):
     new_task = models.Task(title=request.title, duration=request.duration)
     db.add(new_task)
