@@ -1,4 +1,4 @@
-from fastapi import FastAPI, Depends, status, Response
+from fastapi import FastAPI, Depends, status, Response, HTTPException
 from . import schemas, models
 from .database import engine, SessionLocal
 from sqlalchemy.orm import Session
@@ -40,8 +40,9 @@ def alltasks(db: Session = Depends(get_db)):
 def singletask(id, response: Response, db: Session = Depends(get_db)):
     task = db.query(models.Task).filter(models.Task.id == id).first()
     if not task:
-        response.status_code = status.HTTP_404_NOT_FOUND
-        return{
-            'message':f'Task with the id {id} is not available'
-        }
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f'Task with the id {id} is not available')
+        # response.status_code = status.HTTP_404_NOT_FOUND
+        # return{
+        #     'message':f'Task with the id {id} is not available'
+        # }
     return task
