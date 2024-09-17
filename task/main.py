@@ -56,3 +56,7 @@ def destroy(id, db: Session = Depends(get_db)):
         'message': "deleted!"
     }
     
+# update task
+@app.put('/task/{id}', status_code=status.HTTP_202_ACCEPTED)
+def update(id, request: schemas.Task, db: Session = Depends(get_db)):
+    return 'yay'
