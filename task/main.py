@@ -33,6 +33,8 @@ def create(request: schemas.Task, db: Session = Depends(get_db)):
 @app.get('/tasks')
 def alltasks(db: Session = Depends(get_db)):
     tasks = db.query(models.Task).all()
+    if not tasks:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"No Task records found")
     return tasks
 
 # get blog by ID
@@ -52,7 +54,7 @@ def singletask(id, response: Response, db: Session = Depends(get_db)):
 def destroy(id, db: Session = Depends(get_db)):
     task = db.query(models.Task).filter(models.Task.id == id)
     if not task.first():
-        raise HTTPException(status_code=status.HTTP_204_NO_CONTENT, detail=f"Task with id {id} not found")
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"Task with id {id} not found")
     task.delete(synchronize_session=False)
     db.commit()
     return {
