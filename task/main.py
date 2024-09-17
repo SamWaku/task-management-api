@@ -42,6 +42,6 @@ def singletask(id, response: Response, db: Session = Depends(get_db)):
     if not task:
         response.status_code = status.HTTP_404_NOT_FOUND
         return{
-            'message':'Taks with the id {id} is not available'
+            'message':f'Task with the id {id} is not available'
         }
     return task
