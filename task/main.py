@@ -59,6 +59,10 @@ def destroy(id, db: Session = Depends(get_db)):
 # update task
 @app.put('/task/{id}', status_code=status.HTTP_202_ACCEPTED)
 def update(id, request: schemas.Task, db: Session = Depends(get_db)):
-    db.query(models.Task).filter(models.Task.id == id).update({'title': request.title, 'duration':request.duration, 'completed':request.completed})
+    task = db.query(models.Task).filter(models.Task.id == id)
+    if not task.first():
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"Task with id {id} not found")
+    
+    task.update({'title': request.title, 'duration':request.duration, 'completed':request.completed})
     db.commit()
     return 'updated'
