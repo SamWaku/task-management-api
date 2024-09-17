@@ -58,11 +58,19 @@ def destroy(id, db: Session = Depends(get_db)):
     
 # update task
 @app.put('/task/{id}', status_code=status.HTTP_202_ACCEPTED)
-def update(id, request: schemas.Task, db: Session = Depends(get_db)):
+def update(id: int, request: schemas.UpdateTask, db: Session = Depends(get_db)):
     task = db.query(models.Task).filter(models.Task.id == id)
+    
     if not task.first():
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"Task with id {id} not found")
     
-    task.update({'title': request.title, 'duration':request.duration, 'completed':request.completed})
+    # Only update the fields that are present in the request
+    update_data = request.dict(exclude_unset=True)  # `exclude_unset=True` ensures we only update provided fields
+    
+    if not update_data:
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="No fields provided for update")
+
+    task.update(update_data)
     db.commit()
-    return 'updated'
+    
+    return {'detail': 'Task updated'}
