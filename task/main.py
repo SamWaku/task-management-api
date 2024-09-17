@@ -53,6 +53,6 @@ def destroy(id, db: Session = Depends(get_db)):
     db.query(models.Task).filter(models.Task.id == id).delete(synchronize_session=False)
     db.commit()
     return {
-        'message': "delete"
+        'message': "deleted!"
     }
     
