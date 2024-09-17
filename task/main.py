@@ -24,7 +24,11 @@ def create(request: schemas.Task, db: Session = Depends(get_db)):
     db.add(new_task)
     db.commit()
     db.refresh
-    return new_task
+    return {
+        "title": new_task.title,
+        "duration": new_task.duration,
+        "completed": new_task.completed
+    }
 
 @app.get('/tasks')
 def alltasks(db: Session = Depends(get_db)):
