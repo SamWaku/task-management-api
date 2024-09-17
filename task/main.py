@@ -20,7 +20,7 @@ def indexmain():
 
 @app.post('/create-task')
 def create(request: schemas.Task, db: Session = Depends(get_db)):
-    new_task = models.Task(title=request.title, duration=request.duration)
+    new_task = models.Task(title=request.title, duration=request.duration, completed=request.completed)
     db.add(new_task)
     db.commit()
     db.refresh
