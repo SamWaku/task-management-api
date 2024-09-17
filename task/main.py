@@ -50,7 +50,10 @@ def singletask(id, response: Response, db: Session = Depends(get_db)):
 # delete task
 @app.delete('/task/{id}', status_code=status.HTTP_204_NO_CONTENT)
 def destroy(id, db: Session = Depends(get_db)):
-    db.query(models.Task).filter(models.Task.id == id).delete(synchronize_session=False)
+    task = db.query(models.Task).filter(models.Task.id == id)
+    if not task.first():
+        raise HTTPException(status_code=status.HTTP_204_NO_CONTENT, detail=f"Task with id {id} not found")
+    task.delete(synchronize_session=False)
     db.commit()
     return {
         'message': "deleted!"
