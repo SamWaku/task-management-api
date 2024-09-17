@@ -32,7 +32,9 @@ def alltasks(db: Session = Depends(get_db)):
     return tasks
 
 # get blog by ID
-@app.get('/task/{id}')
-def singletask(id, db: Session = Depends(get_db)):
+@app.get('/task/{id}', status_code=status.HTTP_200_OK)
+def singletask(id, response: Response, db: Session = Depends(get_db)):
     task = db.query(models.Task).filter(models.Task.id == id).first()
+    if not task:
+        response.status_code = status.HTTP_404_NOT_FOUND
     return task
