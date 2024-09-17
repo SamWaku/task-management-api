@@ -50,7 +50,8 @@ def singletask(id, response: Response, db: Session = Depends(get_db)):
 # delete task
 @app.delete('/task/{id}', status_code=status.HTTP_204_NO_CONTENT)
 def destroy(id, db: Session = Depends(get_db)):
-    task = db.query(models.Task).filter(models.Task.id == id).delete(synchronize_session=False)
+    db.query(models.Task).filter(models.Task.id == id).delete(synchronize_session=False)
+    db.commit()
     return {
         'message': "delete"
     }
