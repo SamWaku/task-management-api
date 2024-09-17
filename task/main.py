@@ -1,4 +1,4 @@
-from fastapi import FastAPI, Depends
+from fastapi import FastAPI, Depends, status
 from . import schemas, models
 from .database import engine, SessionLocal
 from sqlalchemy.orm import Session
@@ -18,7 +18,7 @@ def get_db():
 def indexmain():
     return "Connected!"
 
-@app.post('/create-task', status_code=201)
+@app.post('/create-task', status_code=status.HTTP_201_CREATED)
 def create(request: schemas.Task, db: Session = Depends(get_db)):
     new_task = models.Task(title=request.title, duration=request.duration, completed=request.completed)
     db.add(new_task)
