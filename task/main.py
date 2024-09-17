@@ -14,10 +14,12 @@ def get_db():
     finally:
         db.close()
 
+# index page
 @app.get('/')
 def indexmain():
     return "Connected!"
 
+# create task
 @app.post('/create-task', status_code=status.HTTP_201_CREATED)
 def create(request: schemas.Task, db: Session = Depends(get_db)):
     new_task = models.Task(title=request.title, duration=request.duration, completed=request.completed)
@@ -30,6 +32,7 @@ def create(request: schemas.Task, db: Session = Depends(get_db)):
         "completed": new_task.completed
     }
 
+# get all tasks
 @app.get('/tasks')
 def alltasks(db: Session = Depends(get_db)):
     tasks = db.query(models.Task).all()
@@ -43,10 +46,6 @@ def singletask(id, response: Response, db: Session = Depends(get_db)):
     task = db.query(models.Task).filter(models.Task.id == id).first()
     if not task:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f'Task with the id {id} is not available')
-        # response.status_code = status.HTTP_404_NOT_FOUND
-        # return{
-        #     'message':f'Task with the id {id} is not available'
-        # }
     return task
 
 # delete task
