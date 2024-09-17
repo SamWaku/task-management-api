@@ -18,7 +18,7 @@ def get_db():
 def indexmain():
     return "Connected!"
 
-@app.post('/create-task')
+@app.post('/create-task', status_code=201)
 def create(request: schemas.Task, db: Session = Depends(get_db)):
     new_task = models.Task(title=request.title, duration=request.duration, completed=request.completed)
     db.add(new_task)
