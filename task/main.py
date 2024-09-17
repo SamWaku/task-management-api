@@ -27,5 +27,12 @@ def create(request: schemas.Task, db: Session = Depends(get_db)):
     return new_task
 
 @app.get('/tasks')
-def alltasks():
-    return
+def alltasks(db: Session = Depends(get_db)):
+    tasks = db.query(models.Task).all()
+    return tasks
+
+# get blog by ID
+@app.get('/task/{id}')
+def singletask(id, db: Session = Depends(get_db)):
+    task = db.query(models.Task).filter(models.Task.id == id).first()
+    return task
