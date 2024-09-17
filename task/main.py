@@ -37,4 +37,7 @@ def singletask(id, response: Response, db: Session = Depends(get_db)):
     task = db.query(models.Task).filter(models.Task.id == id).first()
     if not task:
         response.status_code = status.HTTP_404_NOT_FOUND
+        return{
+            'message':'Taks with the id {id} is not available'
+        }
     return task
