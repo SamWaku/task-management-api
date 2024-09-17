@@ -46,3 +46,12 @@ def singletask(id, response: Response, db: Session = Depends(get_db)):
         #     'message':f'Task with the id {id} is not available'
         # }
     return task
+
+# delete task
+@app.delete('/task/{id}', status_code=status.HTTP_204_NO_CONTENT)
+def destroy(id, db: Session = Depends(get_db)):
+    task = db.query(models.Task).filter(models.Task.id == id).delete(synchronize_session=False)
+    return {
+        'message': "delete"
+    }
+    
