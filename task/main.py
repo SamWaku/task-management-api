@@ -59,4 +59,6 @@ def destroy(id, db: Session = Depends(get_db)):
 # update task
 @app.put('/task/{id}', status_code=status.HTTP_202_ACCEPTED)
 def update(id, request: schemas.Task, db: Session = Depends(get_db)):
-    return 'yay'
+    db.query(models.Task).filter(models.Task.id == id).update({'title': request.title, 'duration':request.duration, 'completed':request.completed})
+    db.commit()
+    return 'updated'
