@@ -14,10 +14,12 @@ def get_db():
     finally:
         db.close()
 
+# index page
 @app.get('/')
 def indexmain():
     return "Connected!"
 
+# create task
 @app.post('/create-task', status_code=status.HTTP_201_CREATED)
 def create(request: schemas.Task, db: Session = Depends(get_db)):
     new_task = models.Task(title=request.title, duration=request.duration, completed=request.completed)
@@ -30,9 +32,12 @@ def create(request: schemas.Task, db: Session = Depends(get_db)):
         "completed": new_task.completed
     }
 
+# get all tasks
 @app.get('/tasks')
 def alltasks(db: Session = Depends(get_db)):
     tasks = db.query(models.Task).all()
+    if not tasks:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"No Task records found")
     return tasks
 
 # get blog by ID
@@ -41,8 +46,35 @@ def singletask(id, response: Response, db: Session = Depends(get_db)):
     task = db.query(models.Task).filter(models.Task.id == id).first()
     if not task:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f'Task with the id {id} is not available')
-        # response.status_code = status.HTTP_404_NOT_FOUND
-        # return{
-        #     'message':f'Task with the id {id} is not available'
-        # }
     return task
+
+# delete task
+@app.delete('/task/{id}', status_code=status.HTTP_204_NO_CONTENT)
+def destroy(id, db: Session = Depends(get_db)):
+    task = db.query(models.Task).filter(models.Task.id == id)
+    if not task.first():
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"Task with id {id} not found")
+    task.delete(synchronize_session=False)
+    db.commit()
+    return {
+        'message': "deleted!"
+    }
+    
+# update task
+@app.put('/task/{id}', status_code=status.HTTP_202_ACCEPTED)
+def update(id: int, request: schemas.UpdateTask, db: Session = Depends(get_db)):
+    task = db.query(models.Task).filter(models.Task.id == id)
+    
+    if not task.first():
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"Task with id {id} not found")
+    
+    # Only update the fields that are present in the request
+    update_data = request.dict(exclude_unset=True)  # `exclude_unset=True` ensures we only update provided fields
+    
+    if not update_data:
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="No fields provided for update")
+
+    task.update(update_data)
+    db.commit()
+    
+    return {'detail': 'Task updated'}
