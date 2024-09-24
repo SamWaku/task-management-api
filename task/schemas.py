@@ -11,6 +11,9 @@ class Task(BaseModel):
 class ShowTask(BaseModel):
     # you could just return the Basemodel if you wish
     title: str
+    duration: str
+    completed: bool
+    
     class Config():
         orm_mode = True
 

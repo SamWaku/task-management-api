@@ -79,3 +79,8 @@ def update(id: int, request: schemas.UpdateTask, db: Session = Depends(get_db)):
     db.commit()
     
     return {'detail': 'Task updated'}
+
+
+@app.post('/create-user')
+def create_user():
+    pass
