@@ -7,6 +7,10 @@ class Task(BaseModel):
     duration: str
     completed: Optional[bool] = False
 
+# response model
+class ShowTask(BaseModel):
+    pass
+
 class UpdateTask(BaseModel):
     title: Optional[str] = None
     duration: Optional[int] = None
