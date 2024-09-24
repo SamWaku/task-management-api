@@ -3,6 +3,7 @@ from . import schemas, models
 from .database import engine, SessionLocal
 from sqlalchemy.orm import Session
 from typing import List
+from passlib.context import CryptContext
 
 models.Base.metadata.create_all(engine)
 
@@ -80,7 +81,7 @@ def update(id: int, request: schemas.UpdateTask, db: Session = Depends(get_db)):
     
     return {'detail': 'Task updated'}
 
-
+pwd_cxt = CryptContext(schemes=["bcrypt"], deprecated="auto")
 @app.post('/create-user')
 def create_user(request: schemas.User, db: Session = Depends(get_db)):
     new_user = models.User(
