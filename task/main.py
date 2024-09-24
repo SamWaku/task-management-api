@@ -2,6 +2,8 @@ from fastapi import FastAPI, Depends, status, Response, HTTPException
 from . import schemas, models
 from .database import engine, SessionLocal
 from sqlalchemy.orm import Session
+from typing import List
+from passlib.context import CryptContext
 
 models.Base.metadata.create_all(engine)
 
@@ -33,7 +35,7 @@ def create(request: schemas.Task, db: Session = Depends(get_db)):
     }
 
 # get all tasks
-@app.get('/tasks')
+@app.get('/tasks', status_code=status.HTTP_200_OK, response_model=List[schemas.ShowTask]) #getting a List, so specify
 def alltasks(db: Session = Depends(get_db)):
     tasks = db.query(models.Task).all()
     if not tasks:
@@ -41,7 +43,7 @@ def alltasks(db: Session = Depends(get_db)):
     return tasks
 
 # get blog by ID
-@app.get('/task/{id}', status_code=status.HTTP_200_OK)
+@app.get('/task/{id}', status_code=status.HTTP_200_OK, response_model=schemas.ShowTask)
 def singletask(id, response: Response, db: Session = Depends(get_db)):
     task = db.query(models.Task).filter(models.Task.id == id).first()
     if not task:
@@ -78,3 +80,16 @@ def update(id: int, request: schemas.UpdateTask, db: Session = Depends(get_db)):
     db.commit()
     
     return {'detail': 'Task updated'}
+
+pwd_cxt = CryptContext(schemes=["bcrypt"], deprecated="auto")
+@app.post('/create-user')
+def create_user(request: schemas.User, db: Session = Depends(get_db)):
+    new_user = models.User(
+        name=request.name,
+        email=request.email,
+        password=request.password
+    )
+    db.add(new_user)
+    db.commit()
+    db.refresh(new_user)
+    return new_user
