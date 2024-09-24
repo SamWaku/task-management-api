@@ -90,5 +90,5 @@ def create_user(request: schemas.User, db: Session = Depends(get_db)):
     )
     db.add(new_user)
     db.commit()
-    db.refresh()
+    db.refresh(new_user)
     return new_user
