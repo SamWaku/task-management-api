@@ -88,4 +88,7 @@ def create_user(request: schemas.User, db: Session = Depends(get_db)):
         email=request.email,
         password=request.password
     )
-    return request
+    db.add(new_user)
+    db.commit()
+    db.refresh()
+    return new_user
