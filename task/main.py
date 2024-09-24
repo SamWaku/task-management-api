@@ -82,5 +82,10 @@ def update(id: int, request: schemas.UpdateTask, db: Session = Depends(get_db)):
 
 
 @app.post('/create-user')
-def create_user(request: schemas.User):
+def create_user(request: schemas.User, db: Session = Depends(get_db)):
+    new_user = models.User(
+        name=request.name,
+        email=request.email,
+        password=request.password
+    )
     return request
