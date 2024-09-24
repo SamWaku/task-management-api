@@ -9,7 +9,9 @@ class Task(BaseModel):
 
 # response model
 class ShowTask(BaseModel):
-    pass
+    title: str
+    class Config():
+        orm_mode = True
 
 class UpdateTask(BaseModel):
     title: Optional[str] = None

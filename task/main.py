@@ -41,7 +41,7 @@ def alltasks(db: Session = Depends(get_db)):
     return tasks
 
 # get blog by ID
-@app.get('/task/{id}', status_code=status.HTTP_200_OK)
+@app.get('/task/{id}', status_code=status.HTTP_200_OK, response_model=schemas.ShowTask)
 def singletask(id, response: Response, db: Session = Depends(get_db)):
     task = db.query(models.Task).filter(models.Task.id == id).first()
     if not task:
