@@ -9,6 +9,7 @@ class Task(BaseModel):
 
 # response model
 class ShowTask(BaseModel):
+    # you could just return the Basemodel if you wish
     title: str
     class Config():
         orm_mode = True

@@ -2,6 +2,7 @@ from fastapi import FastAPI, Depends, status, Response, HTTPException
 from . import schemas, models
 from .database import engine, SessionLocal
 from sqlalchemy.orm import Session
+from typing import List
 
 models.Base.metadata.create_all(engine)
 
@@ -33,7 +34,7 @@ def create(request: schemas.Task, db: Session = Depends(get_db)):
     }
 
 # get all tasks
-@app.get('/tasks')
+@app.get('/tasks', status_code=status.HTTP_200_OK, response_model=List[schemas.ShowTask]) #getting a List, so specify
 def alltasks(db: Session = Depends(get_db)):
     tasks = db.query(models.Task).all()
     if not tasks:
