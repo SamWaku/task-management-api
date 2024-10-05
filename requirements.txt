@@ -3,3 +3,4 @@ uvicorn[Standard]
 sqlalchemy
 psycopg2
 passlib
+bcrypt

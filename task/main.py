@@ -88,7 +88,7 @@ def create_user(request: schemas.User, db: Session = Depends(get_db)):
     new_user = models.User(
         name=request.name,
         email=request.email,
-        password=request.hashedPassword
+        password=hashedPassword
     )
     db.add(new_user)
     db.commit()
