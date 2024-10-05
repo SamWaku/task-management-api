@@ -3,7 +3,8 @@ from . import schemas, models
 from .database import engine, SessionLocal
 from sqlalchemy.orm import Session
 from typing import List
-from passlib.context import CryptContext
+from .controllers.users.auth import hashing
+
 
 models.Base.metadata.create_all(engine)
 
@@ -81,14 +82,14 @@ def update(id: int, request: schemas.UpdateTask, db: Session = Depends(get_db)):
     
     return {'detail': 'Task updated'}
 
-pwd_cxt = CryptContext(schemes=["bcrypt"], deprecated="auto")
+
 @app.post('/create-user')
 def create_user(request: schemas.User, db: Session = Depends(get_db)):
-    hashedPassword = pwd_cxt.hash(request.password)
+    # hashedPassword = pwd_cxt.hash(request.password)
     new_user = models.User(
         name=request.name,
         email=request.email,
-        password=hashedPassword
+        password=hashing.Hash.bcrypt(request.password)
     )
     db.add(new_user)
     db.commit()
