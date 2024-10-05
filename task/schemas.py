@@ -21,3 +21,8 @@ class UpdateTask(BaseModel):
     title: Optional[str] = None
     duration: Optional[int] = None
     completed: Optional[bool] = None
+
+class User(BaseModel):
+    id: int
+    name:str
+    email:str

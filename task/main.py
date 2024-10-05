@@ -85,8 +85,7 @@ def update(id: int, request: schemas.UpdateTask, db: Session = Depends(get_db)):
 
 
 @app.post('/create-user', response_model=User)
-def create_user(request: schemas.User, db: Session = Depends(get_db)):
-    # hashedPassword = pwd_cxt.hash(request.password)
+def create_user(request: User, db: Session = Depends(get_db)):
     new_user = models.User(
         name=request.name,
         email=request.email,
@@ -104,3 +103,10 @@ def get_user(id:int, db: Session = Depends(get_db)):
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"User with the id {id} is not found")
     
     return user
+
+@app.get('/users', status_code=status.HTTP_200_OK, response_model=List[User]) #getting a List, so specify
+def allusers(db: Session = Depends(get_db)):
+    users = db.query(models.User).all()
+    if not users:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"No User records found")
+    return users
