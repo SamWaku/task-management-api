@@ -1,10 +1,12 @@
-from sqlalchemy import Column, Integer, String
+from sqlalchemy import Column, Integer, String, ForeignKey
 from .database import Base
 from sqlalchemy.orm import relationship
 
 class Task(Base):
     __tablename__ = 'tasks'
+
     id = Column(Integer, primary_key=True, index=True)
+    user_id = Column(Integer, ForeignKey('users.id'))
     title = Column(String)
     duration = Column(String)
     completed = Column(String)
@@ -13,6 +15,7 @@ class Task(Base):
 
 class User(Base):
     __tablename__ = "users"
+
     id = Column(Integer, primary_key=True, index=True)
     name = Column(String)
     email = Column(String)
