@@ -84,10 +84,11 @@ def update(id: int, request: schemas.UpdateTask, db: Session = Depends(get_db)):
 pwd_cxt = CryptContext(schemes=["bcrypt"], deprecated="auto")
 @app.post('/create-user')
 def create_user(request: schemas.User, db: Session = Depends(get_db)):
+    hashedPassword = pwd_cxt.hash(request.password)
     new_user = models.User(
         name=request.name,
         email=request.email,
-        password=request.password
+        password=request.hashedPassword
     )
     db.add(new_user)
     db.commit()
