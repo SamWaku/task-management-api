@@ -3,7 +3,9 @@ from . import schemas, models
 from .database import engine, SessionLocal
 from sqlalchemy.orm import Session
 from typing import List
-from passlib.context import CryptContext
+from .controllers.users.auth import hashing
+from .schema.user_schema import User, CreateUser
+
 
 models.Base.metadata.create_all(engine)
 
@@ -22,7 +24,7 @@ def indexmain():
     return "Connected!"
 
 # create task
-@app.post('/create-task', status_code=status.HTTP_201_CREATED)
+@app.post('/create-task', status_code=status.HTTP_201_CREATED, tags=['tasks'])
 def create(request: schemas.Task, db: Session = Depends(get_db)):
     new_task = models.Task(title=request.title, duration=request.duration, completed=request.completed)
     db.add(new_task)
@@ -35,7 +37,7 @@ def create(request: schemas.Task, db: Session = Depends(get_db)):
     }
 
 # get all tasks
-@app.get('/tasks', status_code=status.HTTP_200_OK, response_model=List[schemas.ShowTask]) #getting a List, so specify
+@app.get('/tasks', status_code=status.HTTP_200_OK, response_model=List[schemas.ShowTask], tags=['tasks']) #getting a List, so specify
 def alltasks(db: Session = Depends(get_db)):
     tasks = db.query(models.Task).all()
     if not tasks:
@@ -43,7 +45,7 @@ def alltasks(db: Session = Depends(get_db)):
     return tasks
 
 # get blog by ID
-@app.get('/task/{id}', status_code=status.HTTP_200_OK, response_model=schemas.ShowTask)
+@app.get('/task/{id}', status_code=status.HTTP_200_OK, response_model=schemas.ShowTask, tags=['tasks'])
 def singletask(id, response: Response, db: Session = Depends(get_db)):
     task = db.query(models.Task).filter(models.Task.id == id).first()
     if not task:
@@ -51,7 +53,7 @@ def singletask(id, response: Response, db: Session = Depends(get_db)):
     return task
 
 # delete task
-@app.delete('/task/{id}', status_code=status.HTTP_204_NO_CONTENT)
+@app.delete('/task/{id}', status_code=status.HTTP_204_NO_CONTENT, tags=['tasks'])
 def destroy(id, db: Session = Depends(get_db)):
     task = db.query(models.Task).filter(models.Task.id == id)
     if not task.first():
@@ -63,7 +65,7 @@ def destroy(id, db: Session = Depends(get_db)):
     }
     
 # update task
-@app.put('/task/{id}', status_code=status.HTTP_202_ACCEPTED)
+@app.put('/task/{id}', status_code=status.HTTP_202_ACCEPTED, tags=['tasks'])
 def update(id: int, request: schemas.UpdateTask, db: Session = Depends(get_db)):
     task = db.query(models.Task).filter(models.Task.id == id)
     
@@ -81,15 +83,30 @@ def update(id: int, request: schemas.UpdateTask, db: Session = Depends(get_db)):
     
     return {'detail': 'Task updated'}
 
-pwd_cxt = CryptContext(schemes=["bcrypt"], deprecated="auto")
-@app.post('/create-user')
-def create_user(request: schemas.User, db: Session = Depends(get_db)):
+
+@app.post('/create-user', response_model=User, tags=['users'])
+def create_user(request: CreateUser, db: Session = Depends(get_db)):
     new_user = models.User(
         name=request.name,
         email=request.email,
-        password=request.password
+        password=hashing.Hash.bcrypt(request.password)
     )
     db.add(new_user)
     db.commit()
     db.refresh(new_user)
     return new_user
+
+@app.get('/user/{id}', response_model=User, tags=['users'])
+def get_user(id:int, db: Session = Depends(get_db)):
+    user = db.query(models.User).filter(models.User.id == id).first()
+    if not user:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"User with the id {id} is not found")
+    
+    return user
+
+@app.get('/users', status_code=status.HTTP_200_OK, response_model=List[User], tags=['users']) #getting a List, so specify
+def allusers(db: Session = Depends(get_db)):
+    users = db.query(models.User).all()
+    if not users:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"No User records found")
+    return users

@@ -10,6 +10,8 @@ class Task(BaseModel):
 # response model
 class ShowTask(BaseModel):
     # you could just return the Basemodel if you wish
+    id: int
+    user_id: int
     title: str
     duration: str
     completed: bool
@@ -21,8 +23,3 @@ class UpdateTask(BaseModel):
     title: Optional[str] = None
     duration: Optional[int] = None
     completed: Optional[bool] = None
-
-class User(BaseModel):
-    name:str
-    email:str
-    password:str
