@@ -10,6 +10,8 @@ class Task(BaseModel):
 # response model
 class ShowTask(BaseModel):
     # you could just return the Basemodel if you wish
+    id: int
+    user_id: int
     title: str
     duration: str
     completed: bool

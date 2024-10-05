@@ -4,7 +4,7 @@ from .database import engine, SessionLocal
 from sqlalchemy.orm import Session
 from typing import List
 from .controllers.users.auth import hashing
-from .schema.user_schema import User
+from .schema.user_schema import User, CreateUser
 
 
 models.Base.metadata.create_all(engine)
@@ -85,7 +85,7 @@ def update(id: int, request: schemas.UpdateTask, db: Session = Depends(get_db)):
 
 
 @app.post('/create-user', response_model=User, tags=['users'])
-def create_user(request: User, db: Session = Depends(get_db)):
+def create_user(request: CreateUser, db: Session = Depends(get_db)):
     new_user = models.User(
         name=request.name,
         email=request.email,
